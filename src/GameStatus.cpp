@@ -32,15 +32,30 @@ Edge* GameStatus::getNextMove() {
  * 
  * @param e 
  */
-void GameStatus::update(Edge* e) {
+bool GameStatus::update(Edge* e) {
     this->previousMove = e;
-    int key = e->startX * MAX_COL + e->startY;
+    this->childNodes.clear();
+    int key = e->startX * (MAX_COL + 1) + e->startY;
     if (e->isVertical())
         this->board->verticalEdges[key] = e;
     else
         this->board->horizontalEdges[key] = e;
-    if(this->board->doesCompleteSquare(e->type, e->startX, e->startY))
-            this->team == MAX ? this->maxScore++ : this->minScore++;
+    if (e->playerName == MY_TEAM)
+        this->team = MAX;
+    else 
+        this->team = MIN;
+    if(this->board->doesCompleteSquare(e->type, e->startX, e->startY)) {
+        if (this->team == MAX) {
+            this->maxScore++;
+            this->team = MIN;
+        }
+        else {
+            this->minScore++;
+            this->team = MAX;
+        }
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -50,7 +65,7 @@ void GameStatus::update(Edge* e) {
  */
 GameStatus* GameStatus::copy() {
     Board* newBoard = new Board(*this->board);
-    return new GameStatus(newBoard, this->team);
+    return new GameStatus(newBoard, this->team, this->maxScore, this->minScore);
 }
 
 /**
@@ -73,13 +88,14 @@ vector<GameStatus*> GameStatus::generateChildren(bool isContinue) {
             if (!this->board->existEdge(VERTICAL, row, col)) {
                 // Create a copy of the current state
                 GameStatus* childState = this->copy();
-
+                if (!isContinue) this->team == MAX ? childState->team = MIN : childState->team = MAX;
+                string teamName;
+                childState->team == MAX ? teamName = MY_TEAM : teamName = "opp";
                 // alternate team if it is not a continued generation (second move)
-                if (!isContinue) this->team == MAX ? this->team = MIN : this->team = MAX;
 
                 // Add the new vertical edge to the child state's board, update previousMove
-                int key = row * MAX_COL + col;
-                Edge* newEdge = new Edge(VERTICAL, row, col, MY_TEAM);
+                int key = row * (MAX_COL + 1) + col;
+                Edge* newEdge = new Edge(VERTICAL, row, col, teamName);
                 childState->board->verticalEdges[key] = newEdge;
                 childState->previousMove = newEdge;
 
@@ -97,7 +113,7 @@ vector<GameStatus*> GameStatus::generateChildren(bool isContinue) {
         }
     }
 
-    // all child nodes with possible vertical edges
+    // all child nodes with possible horizontal edges
     for (int col = 0; col < MAX_COL; col++) {
         for (int row = 0; row <= MAX_ROW; row++) {
             if (!this->board->existEdge(HORIZONTAL, row, col)) {
@@ -105,11 +121,12 @@ vector<GameStatus*> GameStatus::generateChildren(bool isContinue) {
                 GameStatus* childState = this->copy();
 
                 // alternate team if it is not a continued generation (second move)
-                if (!isContinue) this->team == MAX ? this->team = MIN : this->team = MAX;
-
+                if (!isContinue) this->team == MAX ? childState->team = MIN : childState->team = MAX;
+                string teamName;
+                childState->team == MAX ? teamName = MY_TEAM : teamName = "opp";
                 // Add the new horizontal edge to the child state's board, update previousMove
-                int key = row * MAX_COL + col;
-                Edge* newEdge = new Edge(HORIZONTAL, row, col, MY_TEAM);
+                int key = row * (MAX_COL + 1) + col;
+                Edge* newEdge = new Edge(HORIZONTAL, row, col, teamName);
                 childState->board->horizontalEdges[key] = newEdge;
                 childState->previousMove = newEdge;
 

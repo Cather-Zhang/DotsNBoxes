@@ -27,7 +27,7 @@ void Board::printBoard() {
 }
 
 bool Board::existEdge(EdgeType edgeType, int startX, int startY) {
-    int key = startX * MAX_COL + startY;
+    int key = startX * (MAX_COL + 1) + startY;
     if (edgeType == VERTICAL) {
         auto edge = verticalEdges.find(key);
         return (edge != verticalEdges.end());
@@ -50,7 +50,7 @@ bool Board::doesCompleteSquare(EdgeType type, int startX, int startY) {
 }
 
 void Board::put(Edge* e) {
-    int key = e->startX * MAX_COL + e->startY;
+    int key = e->startX * (MAX_COL + 1) + e->startY;
     if (e->isHorizontal()) {
         horizontalEdges[key] = e;
     }

@@ -9,5 +9,7 @@ public:
     Minimax();
     ~Minimax();
 
-    GameStatus* minimaxAlphaBeta(GameStatus* currentState, int depth, int alpha, int beta, bool maximixingPlayer, std::vector<Edge*> bestMoves);
+    std::pair<int, std::vector<GameStatus*>> minimaxAlphaBeta(GameStatus* currentState, int depth, int alpha, int beta, bool maximizingPlaye);
+    std::pair<int, std::vector<GameStatus*>> iterativeDeepeningMinimax(GameStatus* currentState, int timeLimit);
+    Edge* getNextMove(GameStatus* gs);
 };

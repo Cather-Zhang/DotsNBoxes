@@ -11,6 +11,7 @@ class GameStatus {
 public:
     GameStatus(PlayerType t) : board(new Board()), team(t), minScore(0), maxScore(0) {}
     GameStatus(Board* b, PlayerType t) : board(b), team(t), minScore(0), maxScore(0) {}
+    GameStatus(Board* b, PlayerType t, int max, int min) : board(b), team(t), maxScore(max), minScore(min) {}
     virtual ~GameStatus();
     
     Board* board;
@@ -21,7 +22,7 @@ public:
 
     bool isTerminal();
     Edge* getNextMove();
-    void update(Edge* e);
+    bool update(Edge* e);
     GameStatus* copy();
     int evaluate();
     std::vector<GameStatus*> generateChildren(bool isContinue);

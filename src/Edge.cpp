@@ -68,3 +68,14 @@ void Edge::print() {
     }
     cout << "Player: " << playerName << endl;
 }
+
+string Edge::toString() {
+    string str;
+    if (type == VERTICAL) {
+        str = "DOTSNBOXES " + to_string(startX) + "," + to_string(startY) + " " + to_string(startX+1) + "," + to_string(startY);
+    }
+    else {
+        str = "DOTSNBOXES " + to_string(startX) + "," + to_string(startY) + " " + to_string(startX) + "," + to_string(startY+1);     
+    }
+    return str;
+}

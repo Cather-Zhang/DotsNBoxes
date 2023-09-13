@@ -2,6 +2,8 @@
 
 #include <string>
 
+#define MY_TEAM "BOTSNDOXES"
+
 enum EdgeType {
     VERTICAL,
     HORIZONTAL
@@ -20,6 +22,7 @@ public:
     bool isVertical();
     bool isHorizontal();
     void print();
+    std::string toString();
 
 private:
     bool isValid(int x1, int y1, int x2, int y2);

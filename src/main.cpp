@@ -14,6 +14,7 @@ int main(int argc, char *argv[]) {
 
     cout << "Constructing a new game" << endl;
 
+/*
     Edge* my1 = new Edge(VERTICAL, 0, 0, MY_TEAM);
     Edge* opp1 = new Edge(HORIZONTAL, 0, 0, "opp");
 
@@ -30,51 +31,48 @@ int main(int argc, char *argv[]) {
 
     Minimax* minimax = new Minimax();
 
-    vector<Edge*> moves;
-    GameStatus* bestState = minimax->minimaxAlphaBeta(gs, 1, INT_MIN, INT_MAX, true, moves);
+    pair<int, vector<GameStatus*>> paths = minimax->minimaxAlphaBeta(gs, 3, INT_MIN, INT_MAX, true);
+    Edge* nextMove = paths.second[1]->previousMove;
+    cout << "Best path" << endl;
+    nextMove->print();
+    cout << nextMove->toString() << endl;
+    cout << "final evaluation: " << paths.first << endl;
     
-    cout << "Best state" << endl;
-    bestState->board->printBoard();
+*/
 
-    cout << "moves" << endl;
-    for (Edge* move: moves) {
-        move->print();
-    } 
-
-    /*
+    GameStatus* gs = new GameStatus(MIN);
+    Minimax* minimax = new Minimax;
     while (!gs->isTerminal())
     {
         if (myTurn) 
         {
-            cout << "all children of this state" << endl;
-            gs->generateChildren(false);
-            gs->printChildren();
-            myTurn = false;
+            
+            cout << "Generating move" << endl;
+            Edge* nextMove = minimax->getNextMove(gs);
+            nextMove->print();
 
-            cout << "My turn input move: " << endl;
-            //Edge* nextMove = gs->getNextMove();
-            //nextMove->print();
-            string move;
-            getline(cin, move);
-            Edge* newEdge = new Edge(move);
-            //newEdge->print();
-            gs->update(newEdge);
+            if (gs->update(nextMove)) myTurn = true;
+            else myTurn = false;
+            cout << "Board after my move" << endl;
             gs->board->printBoard();
-
         }
+
         else
         {
-            myTurn = true;
             cout << "input opponent's move" << endl;
             string move;
             getline(cin, move);
-            gs->update(new Edge(move));
+            Edge* newMove = new Edge(move);
+            if (gs->update(newMove)) myTurn = false;
+            else myTurn = true;
+
+            cout << "Board after opponent's move" << endl;
             gs->board->printBoard();
-            
+
         }
         
     }
-    */
+    
 
 
     return 0;
