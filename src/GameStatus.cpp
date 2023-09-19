@@ -44,15 +44,9 @@ bool GameStatus::update(Edge* e) {
         this->team = MAX;
     else 
         this->team = MIN;
-    if(this->board->doesCompleteSquare(e->type, e->startX, e->startY)) {
-        if (this->team == MAX) {
-            this->maxScore++;
-            this->team = MIN;
-        }
-        else {
-            this->minScore++;
-            this->team = MAX;
-        }
+    int score = this->board->doesCompleteSquare(e);
+    if(score != 0) {
+        score > 0 ? this->addToScore(MAX) : this->addToScore(MIN);
         return true;
     }
     return false;
@@ -74,12 +68,10 @@ GameStatus* GameStatus::copy() {
  * @return int the static evaluation of this game status
  */
 int GameStatus::evaluate() {
-    //TODO
     return maxScore - minScore;
 }
 
 vector<GameStatus*> GameStatus::generateChildren(bool isContinue) {
-    //TODO
     vector<GameStatus*> children;
 
     // all child nodes with possible vertical edges
@@ -99,8 +91,9 @@ vector<GameStatus*> GameStatus::generateChildren(bool isContinue) {
                 childState->board->verticalEdges[key] = newEdge;
                 childState->previousMove = newEdge;
 
-                if (childState->board->doesCompleteSquare(VERTICAL, row, col)) {
-                    childState->addToScore();
+                int pointScored = childState->board->doesCompleteSquare(newEdge);
+                if (pointScored != 0) {
+                    (pointScored > 0) ? childState->addToScore(MAX) : childState->addToScore(MIN);
                     // generate possible second moves
                     childState->generateChildren(true);
                     // add to front of the array so we can check this first
@@ -130,8 +123,9 @@ vector<GameStatus*> GameStatus::generateChildren(bool isContinue) {
                 childState->board->horizontalEdges[key] = newEdge;
                 childState->previousMove = newEdge;
 
-                if (childState->board->doesCompleteSquare(HORIZONTAL, row, col)) {
-                    childState->addToScore();
+                int pointScored = childState->board->doesCompleteSquare(newEdge);
+                if (pointScored != 0) {
+                    (pointScored > 0) ? childState->addToScore(MAX) : childState->addToScore(MIN);
                     // generate possible second moves
                     childState->generateChildren(true);
                     // add to front of the array so we can check this first
@@ -157,8 +151,8 @@ void GameStatus::printChildren() {
     } 
 }
 
-void GameStatus::addToScore() {
-    if (team == MAX) maxScore++;
+void GameStatus::addToScore(PlayerType type) {
+    if (type == MAX) maxScore++;
     else minScore++;
 }
 

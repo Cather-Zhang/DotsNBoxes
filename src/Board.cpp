@@ -38,14 +38,24 @@ bool Board::existEdge(EdgeType edgeType, int startX, int startY) {
     }
 }
 
-bool Board::doesCompleteSquare(EdgeType type, int startX, int startY) {
-    if (type == VERTICAL) {
-        return (((existEdge(VERTICAL, startX, startY - 1)) && existEdge(HORIZONTAL, startX, startY - 1) && existEdge(HORIZONTAL, startX + 1, startY - 1)) ||  //left square
-                ((existEdge(VERTICAL, startX, startY + 1) && existEdge(HORIZONTAL, startX, startY) && existEdge(HORIZONTAL, startX + 1, startY)))); //right square
+int Board::doesCompleteSquare(Edge* e) {
+    int startX = e->startX;
+    int startY = e->startY;
+    if (e->type == VERTICAL) {
+        if (((existEdge(VERTICAL, startX, startY - 1)) && existEdge(HORIZONTAL, startX, startY - 1) && existEdge(HORIZONTAL, startX + 1, startY - 1)) ||  //left square
+            ((existEdge(VERTICAL, startX, startY + 1) && existEdge(HORIZONTAL, startX, startY) && existEdge(HORIZONTAL, startX + 1, startY)))) //right square
+        {
+            return (e->playerName == MY_TEAM) ? 1 : -1;
+        }
+        else return 0;
     }
     else {
-        return (((existEdge(VERTICAL, startX - 1, startY)) && existEdge(VERTICAL, startX - 1, startY + 1) && existEdge(HORIZONTAL, startX - 1, startY)) ||  //top square
-                ((existEdge(VERTICAL, startX, startY + 1) && existEdge(VERTICAL, startX, startY) && existEdge(HORIZONTAL, startX + 1, startY)))); //bottom square
+        if (((existEdge(VERTICAL, startX - 1, startY)) && existEdge(VERTICAL, startX - 1, startY + 1) && existEdge(HORIZONTAL, startX - 1, startY)) ||  //top square
+            ((existEdge(VERTICAL, startX, startY + 1) && existEdge(VERTICAL, startX, startY) && existEdge(HORIZONTAL, startX + 1, startY)))) //bottom square
+        {
+            return (e->playerName == MY_TEAM) ? 1 : -1;
+        }
+        else return 0;
     }
 }
 

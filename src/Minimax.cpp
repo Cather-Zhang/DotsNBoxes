@@ -65,11 +65,13 @@ pair<int, vector<GameStatus*>> Minimax::minimaxAlphaBeta(GameStatus* currentStat
         if (currentState->childNodes.empty())
             currentState->generateChildren(false);
         for (GameStatus* child: currentState->childNodes) {
+            //cout<<"Child state board"<<endl;
+            //child->board->printBoard();
             if (!child->childNodes.empty()) {
-                childResult = minimaxAlphaBeta(child, depth - 1, alpha, beta, true);
+                childResult = minimaxAlphaBeta(child, depth - 1, alpha, beta, false);
             }
             else {
-                childResult = minimaxAlphaBeta(child, depth - 1, alpha, beta, false);
+                childResult = minimaxAlphaBeta(child, depth - 1, alpha, beta, true);
             }
             int eval = childResult.first;
 
@@ -111,7 +113,7 @@ pair<int, vector<GameStatus*>> Minimax::iterativeDeepeningMinimax(GameStatus* cu
 }
 
 Edge* Minimax::getNextMove(GameStatus* gs) {
-    pair<int, vector<GameStatus*>> paths = iterativeDeepeningMinimax(gs, 1000000);
+    pair<int, vector<GameStatus*>> paths = minimaxAlphaBeta(gs, 3, INT_MIN, INT_MAX, true);
     Edge* nextMove = paths.second[1]->previousMove;
     return nextMove;
 }

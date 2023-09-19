@@ -27,6 +27,6 @@ public:
     int evaluate();
     std::vector<GameStatus*> generateChildren(bool isContinue);
     void printChildren();
-    void addToScore();
+    void addToScore(PlayerType t);
     bool isInitialState();
 };
