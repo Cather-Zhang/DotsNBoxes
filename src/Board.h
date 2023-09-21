@@ -2,8 +2,7 @@
 #include <unordered_map>
 #include "Edge.h"
 
-#define MAX_ROW 9
-#define MAX_COL 9
+
 
 class Board {
 public:
@@ -17,5 +16,7 @@ public:
 	bool existEdge(EdgeType edgeType, int startX, int startY);
 	int doesCompleteSquare(Edge* e);
 	void put(Edge* e);
+	Board* copy();
+	std::pair<bool, int> isThirdEdge(Edge* e);
 };
 

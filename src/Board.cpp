@@ -10,6 +10,16 @@ Board::Board() {
 }
 
 Board::~Board() {
+    // Clear the map and delete the objects
+    for (auto& pair : verticalEdges) {
+        delete pair.second; // Delete the Object pointed to by the pointer
+    }
+    verticalEdges.clear();
+    // Clear the map and delete the objects
+    for (auto& pair : horizontalEdges) {
+        delete pair.second; // Delete the Object pointed to by the pointer
+    }
+    horizontalEdges.clear();
 }
 
 void Board::printBoard() {
@@ -41,21 +51,78 @@ bool Board::existEdge(EdgeType edgeType, int startX, int startY) {
 int Board::doesCompleteSquare(Edge* e) {
     int startX = e->startX;
     int startY = e->startY;
-    if (e->type == VERTICAL) {
-        if (((existEdge(VERTICAL, startX, startY - 1)) && existEdge(HORIZONTAL, startX, startY - 1) && existEdge(HORIZONTAL, startX + 1, startY - 1)) ||  //left square
-            ((existEdge(VERTICAL, startX, startY + 1) && existEdge(HORIZONTAL, startX, startY) && existEdge(HORIZONTAL, startX + 1, startY)))) //right square
-        {
-            return (e->playerName == MY_TEAM) ? 1 : -1;
+    int score = 0;
+    if (e->type == VERTICAL) 
+    {
+        // left square
+        if ((existEdge(VERTICAL, startX, startY - 1)) && existEdge(HORIZONTAL, startX, startY - 1) && existEdge(HORIZONTAL, startX + 1, startY - 1)) {
+            e->playerName == MY_TEAM ? score++ : score--;
+        } 
+        // right square
+        if ((existEdge(VERTICAL, startX, startY + 1) && existEdge(HORIZONTAL, startX, startY) && existEdge(HORIZONTAL, startX + 1, startY)))
+            e->playerName == MY_TEAM ? score++ : score--;
         }
-        else return 0;
+    else 
+    {
+        //top square
+        if ((existEdge(VERTICAL, startX - 1, startY)) && existEdge(VERTICAL, startX - 1, startY + 1) && existEdge(HORIZONTAL, startX - 1, startY)) {
+            e->playerName == MY_TEAM ? score++ : score--;
+        }
+
+        //bottom square
+        if ((existEdge(VERTICAL, startX, startY + 1) && existEdge(VERTICAL, startX, startY) && existEdge(HORIZONTAL, startX + 1, startY))) {
+            e->playerName == MY_TEAM ? score++ : score--;
+        }
+    }
+    return score; 
+}
+
+pair<bool, int> Board::isThirdEdge(Edge* e) {
+    int startX = e->startX;
+    int startY = e->startY;
+    int score = 0;
+    if (e->type == VERTICAL) 
+    {
+        int neighborNumLeft = 0;
+        int neighborNumRight = 0;
+        // left square
+        if (existEdge(VERTICAL, startX, startY - 1)) neighborNumLeft++;
+        if (existEdge(HORIZONTAL, startX, startY - 1)) neighborNumLeft++;
+        if (existEdge(HORIZONTAL, startX + 1, startY - 1)) neighborNumLeft++;
+        if (neighborNumLeft == 2) {
+            e->playerName == MY_TEAM ? score-- : score++;
+        }
+        
+        // right square
+        if (existEdge(VERTICAL, startX, startY + 1)) neighborNumRight++;
+        if (existEdge(HORIZONTAL, startX, startY)) neighborNumRight++;
+        if (existEdge(HORIZONTAL, startX + 1, startY)) neighborNumRight++;
+        if (neighborNumRight == 2) {
+            e->playerName == MY_TEAM ? score-- : score++;
+        }
+        return (score != 0) ? make_pair(true, score) : make_pair(false, score);
     }
     else {
-        if (((existEdge(VERTICAL, startX - 1, startY)) && existEdge(VERTICAL, startX - 1, startY + 1) && existEdge(HORIZONTAL, startX - 1, startY)) ||  //top square
-            ((existEdge(VERTICAL, startX, startY + 1) && existEdge(VERTICAL, startX, startY) && existEdge(HORIZONTAL, startX + 1, startY)))) //bottom square
-        {
-            return (e->playerName == MY_TEAM) ? 1 : -1;
+
+        int neighborNumUp = 0;
+        int neighborNumDown = 0;
+        // up square
+        if (existEdge(VERTICAL, startX - 1, startY)) neighborNumUp++;
+        if (existEdge(VERTICAL, startX - 1, startY + 1)) neighborNumUp++;
+        if (existEdge(HORIZONTAL, startX - 1, startY)) neighborNumUp++;
+        if (neighborNumUp == 2) {
+            e->playerName == MY_TEAM ? score-- : score++;
         }
-        else return 0;
+        
+        // down square
+        if (existEdge(VERTICAL, startX, startY + 1)) neighborNumDown++;
+        if (existEdge(VERTICAL, startX, startY)) neighborNumDown++;
+        if (existEdge(HORIZONTAL, startX + 1, startY)) neighborNumDown++;
+        if (neighborNumDown == 2) {
+            e->playerName == MY_TEAM ? score-- : score++;
+        }
+        return (score != 0) ? make_pair(true, score) : make_pair(false, score);
+    
     }
 }
 
@@ -69,3 +136,25 @@ void Board::put(Edge* e) {
     }
 }
 
+Board* Board::copy() {
+    
+    std::unordered_map<int, Edge*> newVerticalEdges;
+    std::unordered_map<int, Edge*> newHorizontalEdges;
+
+    // Iterate through the original map and create new Edge objects
+    for (const auto& pair : verticalEdges) {
+        Edge* copiedEdge = pair.second->copy();
+        newVerticalEdges[pair.first] = copiedEdge;
+    }
+
+    for (const auto& pair : horizontalEdges) {  
+        Edge* copiedEdge = pair.second->copy();
+        newHorizontalEdges[pair.first] = copiedEdge;
+    }
+
+    Board* newBoard = new Board();
+    newBoard->verticalEdges = newVerticalEdges;
+    newBoard->horizontalEdges = newHorizontalEdges;
+    //newBoard->printBoard();
+    return newBoard;
+}

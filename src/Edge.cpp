@@ -80,3 +80,6 @@ string Edge::toString() {
     return str;
 }
 
+Edge* Edge::copy() {
+    return new Edge(type, startX, startY, playerName);
+}

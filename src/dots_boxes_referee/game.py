@@ -110,17 +110,18 @@ class Game:
                     self.p2_points += points
 
                 # check if no more moves left (end game)
-                    if self.moves > 162:
-                        # generate end game flag
-                        if self.p1_points > self.p2_points:
-                            self.winner = gp.MARKERS[0]
-                            # p1 wins
-                        elif self.p2_points > self.p1_points:
-                            self.winner = gp.MARKERS[1]
-                            # p2 wins
-                        else:
-                            # draw
-                            self.winner = gp.DRAW
+                if self.moves > len(self.board) - 1:
+                    running = False
+                    # generate end game flag
+                    if self.p1_points > self.p2_points:
+                        self.winner = gp.MARKERS[0]
+                        # p1 wins
+                    elif self.p2_points > self.p1_points:
+                        self.winner = gp.MARKERS[1]
+                        # p2 wins
+                    else:
+                        # draw
+                        self.winner = gp.DRAW
                     # end the game
                 # if points = 0, change turns
                 if points == 0:

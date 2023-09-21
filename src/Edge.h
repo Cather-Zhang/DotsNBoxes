@@ -2,8 +2,10 @@
 
 #include <string>
 
-#define MY_TEAM "BotsNDoxes"
-//#define MY_TEAM "boo"
+#define MAX_ROW 9
+#define MAX_COL 9
+//#define MY_TEAM "BotsNDoxes"
+#define MY_TEAM "boo"
 
 enum EdgeType {
     VERTICAL,
@@ -15,6 +17,7 @@ public:
     int startX;
     int startY;
     EdgeType type;
+
     std::string playerName;
 
     Edge(EdgeType t, int x, int y, const std::string player) : startX(x), startY(y), type(t), playerName(player) {}
@@ -24,7 +27,8 @@ public:
     bool isHorizontal();
     void print();
     std::string toString();
-    bool isPassedMove();
+    //bool isPassedMove();
+    Edge* copy();
 
 private:
     bool isValid(int x1, int y1, int x2, int y2);
