@@ -4,6 +4,7 @@ import pygame
 import core_gameplay as gp
 import display as disp
 from dotsandboxes import generateEdges
+import time
 from external_players import external_player
 
 # Each AI function will have its own file to allow for more modular creation
@@ -59,6 +60,8 @@ class Game:
             if self.winner != gp.NO_MARKER:
 
                 self.end_game()
+                running = False
+                time.sleep(5)
                 continue
 
             current_marker = self.markers[self.current_player]
@@ -111,17 +114,18 @@ class Game:
 
                 # check if no more moves left (end game)
                 if self.moves > len(self.board) - 1:
-                    running = False
                     # generate end game flag
                     if self.p1_points > self.p2_points:
-                        self.winner = gp.MARKERS[0]
+                        self.winner = gp.MARKERS[1]
                         # p1 wins
                     elif self.p2_points > self.p1_points:
-                        self.winner = gp.MARKERS[1]
+                        self.winner = gp.MARKERS[0]
                         # p2 wins
                     else:
                         # draw
                         self.winner = gp.DRAW
+                    self.end_game(reason=f"{self.names[0]} got {self.p1_points} points and {self.names[1]} got {self.p2_points} points")
+                    running = False
                     # end the game
                 # if points = 0, change turns
                 if points == 0:
@@ -149,12 +153,8 @@ class Game:
     def end_game(self, reason=None):
 
         if self.winner > gp.DRAW:
-            print("Player " + str(self.names[int(self.winner - 1)]) + " wins")
             L = str(self.names[int(self.winner - 1)])
             w = str(self.names[(int(self.winner - 1) + 1) % 2])
-            if reason is None:
-                reason = "The winning player has won 3 local boards in a row on the global board!"
-            print("Player " + w + " wins")
             msg = f"END: {w} WINS! {L} LOSES! " + reason
         else:
             msg = "END: Match TIED!"

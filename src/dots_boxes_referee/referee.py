@@ -38,8 +38,6 @@ def clean():
             if pattern.match(file):
                 os.remove(file)
 
-
-
 def main():
     """
     Main Referee function
@@ -60,7 +58,6 @@ def main():
         p3 = p1
         p1 = p2
         p2 = p3
-    print(5)
     # Clean any pre-existing files
     clean()
 

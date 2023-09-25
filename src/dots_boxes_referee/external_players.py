@@ -93,7 +93,7 @@ def external_player(board, name, opponent_name, pass_or_go=False, time_limit=10)
                 r2 = int(coord2[0])
                 c2 = int(coord2[1])
             except:
-                return BAD_MOVE_I_LOST, f'Invalid move!'
+                return BAD_MOVE_I_LOST, f'Invalid move! unable to parse'
 
 
             # Verify that move is from expected player
@@ -102,7 +102,7 @@ def external_player(board, name, opponent_name, pass_or_go=False, time_limit=10)
 
             if pass_or_go:
                 if r1 != 0 or c1 != 0 or r2 != 0 or c2 != 0:
-                    return BAD_MOVE_I_LOST, f'Invalid move!'
+                    return BAD_MOVE_I_LOST, f'Invalid move! you should pass'
             else:
                 # Check if move is valid
 
@@ -118,7 +118,7 @@ def external_player(board, name, opponent_name, pass_or_go=False, time_limit=10)
                 marked = board.get(((r1, c1), (r2, c2)))
 
                 if marked != 0:
-                    return BAD_MOVE_I_LOST, f'Invalid move!'
+                    return BAD_MOVE_I_LOST, f'Invalid move! already on board'
 
     else:
         # Player didn't move in time!
