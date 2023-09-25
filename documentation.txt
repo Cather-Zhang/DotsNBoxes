@@ -1,0 +1,26 @@
+a. 
+Nicole Burgess
+    setting up the classes 
+Joanna Hu
+    implement referee integration
+Cather Zhang 
+    implement minimax, alpha-beta pruning
+
+b. Instructions on compiling and running your program.
+1. To compile the project, make sure you have gcc/g++ installed:
+    $ g++ --version
+2. Install c/c++ extensions on VSCode
+3. Run the following command in terminal
+    $ cd "<Replace with the full path of the src folder>" ; if ($?) { g++ main.cpp Edge.cpp GameStatus.cpp Board.cpp Minimax.cpp -o main } ; if ($?) { .\main }
+
+c. The utility function that your program uses.
+(maxscore - minscore) * 100
+d. The evaluation function that your program uses.
+e. The heuristics and/or strategies that you employed to decide how to expand nodes of the minimax tree without exceeding your time limit.
+    chain heuristics to avoid letting oponents score by minimizing opponents chain score chancing and maximizing ours
+f. Results:
+    a. describe which tests you ran to try out your program. Did your program play against human players? Did your program play against itself? Did your program play against other programs? How did your program do during those games?
+        we played against human by manually coding the moves and extending the time limit and also by playing itself and changing the team name
+    b. describe the strengths and the weaknesses of your program.
+g. A discussion of why the evaluation function and the heuristic(s) you picked are good choices.
+    we can avoid creating long chains and avoid searching aggressively deep trees
