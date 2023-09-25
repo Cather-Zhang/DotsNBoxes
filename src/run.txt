@@ -1,0 +1,2 @@
+BotsNDoxes
+g++ main.cpp Edge.cpp GameStatus.cpp Board.cpp Minimax.cpp -o BotsNDoxes

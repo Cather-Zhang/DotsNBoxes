@@ -4,6 +4,3 @@
 #include "Board.h"
 
 #define PROGRAM_NAME "Dots and Boxes"
-#define MY_TEAM "BOTSNDOXES"
-
-

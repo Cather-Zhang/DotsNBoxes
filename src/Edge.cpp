@@ -6,6 +6,9 @@
 
 using namespace std;
 
+/**
+ * @brief create a new edge from string that is read from move_file
+*/
 Edge::Edge(string move) {
     //cout << move << endl;
     stringstream ss(move);
@@ -43,18 +46,34 @@ Edge::Edge(string move) {
 
 }
 
+/**
+ * @brief check if an edge is valid
+ * @return true if it is on board and valid, else false
+*/
 bool Edge::isValid(int x1, int y1, int x2, int y2) {
     return x1 >= 0 && x1 <= 9 && x2 >= 0 && x2 <= 9 && y1 >= 0 && y1 <= 9 && y2 >= 0 && y2 <= 9 && (abs(x1 - x2) + abs(y1 - y2) == 1);
 }
 
+/**
+ * @brief check if edge is vertical
+ * @return true if edge is vertical, else false;
+*/
 bool Edge::isVertical() {
     return (this->type == VERTICAL);
 }
 
+/**
+ * @brief check if edge is horizontal
+ * @return true if edge is horizontal, else false;
+*/
 bool Edge::isHorizontal() {
     return (this->type == HORIZONTAL);
 }
 
+
+/**
+ * @brief print the edge to terminal
+*/
 void Edge::print() {
     cout << "Start: (" << startX << ", " << startY << "), ";
     if (type == VERTICAL)
@@ -69,13 +88,50 @@ void Edge::print() {
     cout << "Player: " << playerName << endl;
 }
 
+/**
+ * @brief convert the edge to string 
+ * @return string:
+ *         String that is accepted format by the referee
+ *         e.g. "BotsNDoxes 1,2 2,2"
+*/
 string Edge::toString() {
     string str;
     if (type == VERTICAL) {
-        str = "DOTSNBOXES " + to_string(startX) + "," + to_string(startY) + " " + to_string(startX+1) + "," + to_string(startY);
+        str = MY_TEAM" " + to_string(startX) + "," + to_string(startY) + " " + to_string(startX+1) + "," + to_string(startY);
     }
     else {
-        str = "DOTSNBOXES " + to_string(startX) + "," + to_string(startY) + " " + to_string(startX) + "," + to_string(startY+1);     
+        str = MY_TEAM" " + to_string(startX) + "," + to_string(startY) + " " + to_string(startX) + "," + to_string(startY+1);     
     }
     return str;
+}
+
+/**
+ * @brief convert the edge to key on hashmap
+ * @return int:
+ *         the key on hashmap
+*/
+int Edge::toKey() {
+    return startX * (MAX_COL + 1) + startY;
+}
+
+/**
+ * @brief make a complete copy of edge
+ * @return Edge*:
+ *         The address of copied edge
+*/
+Edge* Edge::copy() {
+    return new Edge(type, startX, startY, playerName);
+}
+
+
+/**
+ * @brief check if an edge is at boarder of the game board
+*/
+bool Edge::isAtBoarder() {
+    if (type == VERTICAL) {
+        return startY == 0 || startY == MAX_COL;
+    }
+    else {
+        return startX == 0 || startX == MAX_ROW;
+    }
 }
